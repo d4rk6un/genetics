@@ -3,6 +3,13 @@ import bisect
 import itertools
 
 
+def _accumulate_scores(population):
+    """Return cumulative scores list and total score for a population."""
+    cumulative = list(itertools.accumulate(member.score for member in population))
+    total = cumulative[-1] if cumulative else 0
+    return cumulative, total
+
+
 def tournament(tournament_size):
     def tournament_selector(population, num_parents):
         for _ in range(num_parents):
@@ -14,9 +21,7 @@ def roulette(population, num_parents):
     #Uses code taken from
     #http://stackoverflow.com/questions/3679694/a-weighted-version-of-random-choice
 
-    cumulative_scores = list(
-        itertools.accumulate(member.score for member in population))
-    total = cumulative_scores[-1]
+    cumulative_scores, total = _accumulate_scores(population)
 
     for _ in range(num_parents):
         yield population[
